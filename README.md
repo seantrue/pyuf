@@ -1,7 +1,9 @@
 ### The new python library for UFACTORY
 
 Currently supports Swift / Swift PRO and uArm Metal,
-and it's python3 only.
+and it's (no longer) python3 only.
+
+This fork uses the 3to2 tool and some light editing to make a version that _may_ work with Python 2.7
 
 There are two ways to use this library:
 
