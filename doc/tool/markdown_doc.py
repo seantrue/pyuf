@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-"""
+u"""
 markdowndoc.py
 
 Written by Patrick Laban and Geremy Condra
@@ -13,35 +13,36 @@ This module contains a simple class to output Markdown-style
 pydocs.
 """
 
-import pydoc, inspect, re, builtins
+from __future__ import absolute_import
+import pydoc, inspect, re, __builtin__
 
 class MarkdownDoc(pydoc.TextDoc):
 
-	underline = "*" * 40
+	underline = u"*" * 40
 
 	def process_docstring(self, obj):
-		"""Get the docstring and turn it into a list."""
+		u"""Get the docstring and turn it into a list."""
 		docstring = pydoc.getdoc(obj)
-		return '```\n{}\n```\n\n'.format(docstring) if docstring else ''
+		return u'```\n{}\n```\n\n'.format(docstring) if docstring else u''
 
 	def process_class_name(self, name, bases, module):
-		"""Format the class's name and bases."""
-		title = "## class " + self.bold(name)
+		u"""Format the class's name and bases."""
+		title = u"## class " + self.bold(name)
 		if bases:
 			# get the names of each of the bases
 			base_titles = [pydoc.classname(base, module) for base in bases]
 			# if its not just object
 			if len(base_titles) > 1:
 				# append the list to the title
-				title += "(%s)" % ", ".join(base_titles)
+				title += u"(%s)" % u", ".join(base_titles)
 		return title
 
 	def process_subsection(self, name):
-		"""format the subsection as a header"""
-		return "### " + name
+		u"""format the subsection as a header"""
+		return u"### " + name
 
 	def docclass(self, cls, name=None, mod=None):
-		"""Produce text documentation for the class object cls."""
+		u"""Produce text documentation for the class object cls."""
 
 		# the overall document, as a line-delimited list
 		document = []
@@ -76,29 +77,29 @@ class MarkdownDoc(pydoc.TextDoc):
 		# sort them into categories
 		data, descriptors, methods = [], [], []
 		for attr in attrs:
-			if attr[1] == "data" and not attr[0].startswith("_"):
+			if attr[1] == u"data" and not attr[0].startswith(u"_"):
 				data.append(attr)
-			elif attr[1] == "data descriptor" and not attr[0].startswith("_"):
+			elif attr[1] == u"data descriptor" and not attr[0].startswith(u"_"):
 				descriptors.append(attr)
-			elif "method" in attr[1] and not attr[2] is builtins.object:
+			elif u"method" in attr[1] and not attr[2] is __builtin__.object:
 				methods.append(attr)
 
 		if data:
 			# start the data section
-			document.append(self.process_subsection(self.bold("data")))
+			document.append(self.process_subsection(self.bold(u"data")))
 			document.append(self.underline)
 
 			# process your attributes
 			for name, kind, classname, value in data:
-				if hasattr(value, '__call__') or inspect.isdatadescriptor(value):
+				if hasattr(value, u'__call__') or inspect.isdatadescriptor(value):
 					doc = getdoc(value)
 				else: 
 					doc = None
-				document.append(self.docother(getattr(cls, name), name, mod, maxlen=70, doc=doc) + '\n')
+				document.append(self.docother(getattr(cls, name), name, mod, maxlen=70, doc=doc) + u'\n')
 
 		if descriptors:
 			# start the descriptors section
-			document.append(self.process_subsection(self.bold("descriptors")))
+			document.append(self.process_subsection(self.bold(u"descriptors")))
 			document.append(self.underline)
 
 			# process your descriptors
@@ -107,80 +108,80 @@ class MarkdownDoc(pydoc.TextDoc):
 
 		if methods:
 			# start the methods section
-			document.append(self.process_subsection(self.bold("methods")))
+			document.append(self.process_subsection(self.bold(u"methods")))
 			document.append(self.underline)
 
 			# process your methods
 			for name, kind, classname, value in methods:
 				document.append(self.document(getattr(cls, name), name, mod, cls))
 
-		return "\n".join(document)		
+		return u"\n".join(document)		
 
 	def bold(self, text):
-		""" Formats text as bold in markdown. """
-		if text.startswith('_') and text.endswith('_'):
-			return "__\%s\__" %text
-		elif text.startswith('_'):
-			return "__\%s__" %text
-		elif text.endswith('_'):
-			return "__%s\__" %text
+		u""" Formats text as bold in markdown. """
+		if text.startswith(u'_') and text.endswith(u'_'):
+			return u"__\%s\__" %text
+		elif text.startswith(u'_'):
+			return u"__\%s__" %text
+		elif text.endswith(u'_'):
+			return u"__%s\__" %text
 		else:
-			return "__%s__" %text
+			return u"__%s__" %text
 
-	def indent(self, text, prefix=''):
-		"""Indent text by prepending a given prefix to each line."""
-		return "```\n{}\n```".format(text) if text else text
+	def indent(self, text, prefix=u''):
+		u"""Indent text by prepending a given prefix to each line."""
+		return u"```\n{}\n```".format(text) if text else text
     
 	def section(self, title, contents):
-		"""Format a section with a given heading."""
+		u"""Format a section with a given heading."""
 		clean_contents = self.indent(contents).rstrip()
-		return "# " + self.bold(title) + '\n\n' + clean_contents + '\n\n'
+		return u"# " + self.bold(title) + u'\n\n' + clean_contents + u'\n\n'
 
 	def docroutine(self, object, name=None, mod=None, cl=None):
-		"""Produce text documentation for a function or method object."""
+		u"""Produce text documentation for a function or method object."""
 		realname = object.__name__
 		name = name or realname
-		note = ''
+		note = u''
 		skipdocs = 0
 		if inspect.ismethod(object):
-			object = object.__func__
+			object = object.im_func
 		if name == realname:
 			title = self.bold(realname)
 		else:
 			if (cl and realname in cl.__dict__ and cl.__dict__[realname] is object):
 				skipdocs = 1
-			title = self.bold(name) + ' = ' + realname
+			title = self.bold(name) + u' = ' + realname
 		if inspect.isfunction(object):
-			args, varargs, varkw, defaults, kwonlyargs, kwdefaults, ann = inspect.getfullargspec(object)
+			args, varargs, varkw, defaults, kwonlyargs, kwdefaults, ann = inspect.getargspec(object)
 			argspec = inspect.formatargspec(
 				args, varargs, varkw, defaults, kwonlyargs, kwdefaults, ann,
 				formatvalue=self.formatvalue,
 				formatannotation=inspect.formatannotationrelativeto(object))
-			if realname == '<lambda>':
-				title = self.bold(name) + ' lambda '
+			if realname == u'<lambda>':
+				title = self.bold(name) + u' lambda '
 				# XXX lambda's won't usually have func_annotations['return']
 				# since the syntax doesn't support but it is possible.
 				# So removing parentheses isn't truly safe.
 				argspec = argspec[1:-1] # remove parentheses
 		else:
-			argspec = '(...)'
-		decl = "#### " + "def " + title + argspec + ':' + '\n' + note
+			argspec = u'(...)'
+		decl = u"#### " + u"def " + title + argspec + u':' + u'\n' + note
 
 		if skipdocs:
-			return decl + '\n'
+			return decl + u'\n'
 		else:
-			doc = pydoc.getdoc(object) or ''
-			return decl + '\n' + (doc and self.indent(doc).rstrip() + '\n')
+			doc = pydoc.getdoc(object) or u''
+			return decl + u'\n' + (doc and self.indent(doc).rstrip() + u'\n')
 
 	def docother(self, object, name=None, mod=None, parent=None, maxlen=None, doc=None):
-		"""Produce text documentation for a data object."""
-		line = "#### " + object.__name__ + "\n"
-		line += super().docother(object, name, mod, parent, maxlen, doc)
-		return line + "\n"
+		u"""Produce text documentation for a data object."""
+		line = u"#### " + object.__name__ + u"\n"
+		line += super(MarkdownDoc, self).docother(object, name, mod, parent, maxlen, doc)
+		return line + u"\n"
 
 	def _docdescriptor(self, name, value, mod):
-		results = ""
-		if name: results += "#### " + self.bold(name) + "\n"
-		doc = pydoc.getdoc(value) or ""
-		if doc: results += doc + "\n"
+		results = u""
+		if name: results += u"#### " + self.bold(name) + u"\n"
+		doc = pydoc.getdoc(value) or u""
+		if doc: results += doc + u"\n"
 		return results

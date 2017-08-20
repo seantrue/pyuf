@@ -6,8 +6,10 @@
 #
 # Author: Duke Fong <duke@ufactory.cc>
 
-from queue import Queue
-import _thread, threading
+from __future__ import absolute_import
+from Queue import Queue
+import threading
+import thread
 from .ufc import UFC
 
 
@@ -31,7 +33,7 @@ class TopicSub(threading.Thread):
         self.alive = False
         self.join()
 
-class TopicPub():
+class TopicPub(object):
     def __init__(self, node, topic):
         self.node = node
         self.topic = topic
@@ -41,12 +43,12 @@ class TopicPub():
         for _, item in self.topic.subs.items():
             item.queue.put(message)
 
-class Topic():
+class Topic(object):
     def __init__(self, path):
         self.path = path
         self.subs = {} # format: 'node: handle, ...'
         self.pubs = {}
-        #self.pub_lock = _thread.allocate_lock()
+        self.pub_lock = thread.allocate_lock()
         
     def add_sub(self, handle):
         self.subs[handle.node] = handle
@@ -55,22 +57,22 @@ class Topic():
         self.pubs[handle.node] = handle
 
 
-class ServiceProvider():
+class ServiceProvider(object):
     def __init__(self, node, service, callback):
         self.node = node
         self.service = service
         self.callback = callback
 
-class ServiceReq():
+class ServiceReq(object):
     def __init__(self, node, service):
         self.node = node
         self.service = service
     
     def call(self, message):
         ret = self.service.provider.callback(message)
-        return ret if ret != None else ''
+        return ret if ret != None else u''
 
-class Service():
+class Service(object):
     def __init__(self, path):
         self.path = path
         self.provider = None
@@ -78,7 +80,7 @@ class Service():
         
     def add_provider(self, handle):
         if self.provider:
-            raise Exception('already registered')
+            raise Exception(u'already registered')
         self.provider = handle
     
     def add_req(self, handle):
@@ -88,7 +90,7 @@ class Service():
 
 
 class UFCThread(UFC):
-    '''Inner-Thread communication provider for UFC'''
+    u'''Inner-Thread communication provider for UFC'''
     def __init__(self):
         self._buses = {} # format: 'path: handle, ...'
     

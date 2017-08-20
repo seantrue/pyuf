@@ -7,19 +7,21 @@
 # Author: Duke Fong <duke@ufactory.cc>
 
 
-import _thread, threading
+from __future__ import absolute_import
+import threading
 import serial
 from serial.tools import list_ports
 from ..utils.select_serial_port import select_port
 from ..utils.log import *
+from itertools import imap
 
 class SerialAscii(threading.Thread):
     def __init__(self, ufc, node, iomap, dev_port = None, baud = 115200, filters = None):
         
         self.ports = {
-            'in': {'dir': 'in', 'type': 'topic', 'callback': self.in_cb},
-            'out': {'dir': 'out', 'type': 'topic'},
-            'service': {'dir': 'in', 'type': 'service', 'callback': self.service_cb}
+            u'in': {u'dir': u'in', u'type': u'topic', u'callback': self.in_cb},
+            u'out': {u'dir': u'out', u'type': u'topic'},
+            u'service': {u'dir': u'in', u'type': u'service', u'callback': self.service_cb}
         }
         
         self.node = node
@@ -33,7 +35,7 @@ class SerialAscii(threading.Thread):
         # TODO: maintain serial connection by service callback
         self.com = serial.Serial(port = dev_port, baudrate = baud)
         if not self.com.isOpen():
-            raise Exception('serial open failed')
+            raise Exception(u'serial open failed')
         threading.Thread.__init__(self)
         self.daemon = True
         self.alive = True
@@ -44,10 +46,10 @@ class SerialAscii(threading.Thread):
             line = self.com.readline()
             if not line:
                 continue
-            line = ''.join(map(chr, line)).rstrip()
-            if self.ports['out']['handle']:
-                self.ports['out']['handle'].publish(line)
-            self.logger.log(logging.VERBOSE, '-> ' + line)
+            line = u''.join(imap(unichr, line)).rstrip()
+            if self.ports[u'out'][u'handle']:
+                self.ports[u'out'][u'handle'].publish(line)
+            self.logger.log(logging.VERBOSE, u'-> ' + line)
         self.com.close()
     
     def stop(self):
@@ -55,8 +57,8 @@ class SerialAscii(threading.Thread):
         self.join()
     
     def in_cb(self, message):
-        self.com.write(bytes(map(ord, message + '\n')))
-        self.logger.log(logging.VERBOSE, '<- ' + message)
+        self.com.write(str(imap(ord, message + u'\n')))
+        self.logger.log(logging.VERBOSE, u'<- ' + message)
     
     def service_cb(self, message):
         pass

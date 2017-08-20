@@ -6,13 +6,14 @@
 #
 # Author: Duke Fong <duke@ufactory.cc>
 
+from __future__ import absolute_import
 from .ufc_thread import UFCThread
 from .ufc import UFC
 
-def ufc_init(medium = 'thread'):
-    if medium == 'thread':
+def ufc_init(medium = u'thread'):
+    if medium == u'thread':
         return UFCThread()
     else:
-        raise Exception('medium not support')
+        raise Exception(u'medium not support')
 
 

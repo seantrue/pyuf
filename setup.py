@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 
+from __future__ import absolute_import
+from io import open
 try:
     from setuptools import setup
 except ImportError:
@@ -8,16 +10,16 @@ except ImportError:
 
 
 setup(
-    name = 'pyuf',
-    version = '1.2',
-    description = 'Python library for uFactory',
-    author = 'Duke Fong',
-    author_email = 'developer@ufactory.cc',
-    url = "https://github.com/uarm-developer/pyuf",
-    keywords = "pyuf swift uarm ufactory",
-    packages = ['uf', 'uf.ufc', 'uf.utils', 'uf.comm', 'uf.swift', 'uf.swift.grove', 'uf.uarm', 'uf.wrapper'],
-    install_requires = ['pyserial>=3.0'],
-    long_description = open('README.md').read(),
-    license = 'BSD'
+    name = u'pyuf',
+    version = u'1.2',
+    description = u'Python library for uFactory',
+    author = u'Duke Fong',
+    author_email = u'developer@ufactory.cc',
+    url = u"https://github.com/uarm-developer/pyuf",
+    keywords = u"pyuf swift uarm ufactory",
+    packages = [u'uf', u'uf.ufc', u'uf.utils', u'uf.comm', u'uf.swift', u'uf.swift.grove', u'uf.uarm', u'uf.wrapper'],
+    install_requires = [u'pyserial>=3.0'],
+    long_description = open(u'README.md').read(),
+    license = u'BSD'
 )
 

@@ -7,14 +7,15 @@
 # Author: Duke Fong <duke@ufactory.cc>
 
 
+from __future__ import absolute_import
 from serial.tools import list_ports
 
 def _dump_port(logger, d):
-    logger.info('{}:'.format(d.device))
-    logger.info('  hwid        : "{}"'.format(d.hwid))
-    logger.info('  manufacturer: "{}"'.format(d.manufacturer))
-    logger.info('  product     : "{}"'.format(d.product))
-    logger.info('  description : "{}"'.format(d.description))
+    logger.info(u'{}:'.format(d.device))
+    logger.info(u'  hwid        : "{}"'.format(d.hwid))
+    logger.info(u'  manufacturer: "{}"'.format(d.manufacturer))
+    logger.info(u'  product     : "{}"'.format(d.product))
+    logger.info(u'  description : "{}"'.format(d.description))
 
 def _dump_ports(logger):
     for d in list_ports.comports():
@@ -31,32 +32,32 @@ def select_port(logger = None, dev_port = None, filters = None, must_unique = Fa
                     continue
                 a = getattr(d, k)
                 if not a:
-                    a = ''
+                    a = u''
                 if not a.startswith(v):
                     is_match = False
             if is_match:
                 if dev_port == None:
                     dev_port = d.device
                     if logger:
-                        logger.info('choose device: ' + dev_port)
+                        logger.info(u'choose device: ' + dev_port)
                         _dump_port(logger, d)
                 else:
                     if logger:
-                        logger.warning('find more than one port')
+                        logger.warning(u'find more than one port')
                     not_unique = True
         if not_unique:
             if logger:
-                logger.info('current filter: {}, all ports:'.format(filters))
+                logger.info(u'current filter: {}, all ports:'.format(filters))
                 _dump_ports(logger)
             if must_unique:
-                raise Exception('port is not unique')
+                raise Exception(u'port is not unique')
     
     if not dev_port:
         if logger:
             if filters:
-                logger.error('port not found, current filter: {}, all ports:'.format(filters))
+                logger.error(u'port not found, current filter: {}, all ports:'.format(filters))
             else:
-                logger.error('please specify dev_port or filters, all ports:')
+                logger.error(u'please specify dev_port or filters, all ports:')
             _dump_ports(logger)
         return None
     

@@ -7,12 +7,13 @@
 # Author: Duke Fong <duke@ufactory.cc>
 
 
+from __future__ import absolute_import
 import logging
 
 logging.VERBOSE = 5
 
 def logger_init(level = logging.INFO):
-    logging.basicConfig(format = '%(levelname)s: %(name)s: %(message)s', level = level)
-    logging.addLevelName(logging.VERBOSE, 'VERBOSE')
+    logging.basicConfig(format = u'%(levelname)s: %(name)s: %(message)s', level = level)
+    logging.addLevelName(logging.VERBOSE, u'VERBOSE')
 
 

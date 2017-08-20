@@ -6,6 +6,7 @@
 #
 # Author: Duke Fong <duke@ufactory.cc>
 
+from __future__ import absolute_import
 from ..utils.module_group import ModuleGroup
 from ..comm.serial_ascii import SerialAscii
 from ..comm.protocol_ascii import ProtocolAscii
@@ -14,77 +15,77 @@ from .gripper import Gripper
 from .pump import Pump
 
 class Uarm(ModuleGroup):
-    '''\
+    u'''\
     The top module of uArm Metal
     default kwargs: dev_port = None, baud = 115200, filters = {'hwid': 'USB VID:PID=0403:6001'}
     '''
     sub_nodes = [
         {
-            'module': SerialAscii,
-            'node': 'serial_ascii',
-            'args': ['dev_port', 'baud', 'filters'],
-            'iomap': {
-                'out': 'inner: pkt_ser2ptc',
-                'in':  'inner: pkt_ptc2ser'
+            u'module': SerialAscii,
+            u'node': u'serial_ascii',
+            u'args': [u'dev_port', u'baud', u'filters'],
+            u'iomap': {
+                u'out': u'inner: pkt_ser2ptc',
+                u'in':  u'inner: pkt_ptc2ser'
             }
         },
         {
-            'module': ProtocolAscii,
-            'node': 'ptc_ascii',
-            'args': ['cmd_pend_size'],
-            'iomap': {
-                'cmd_async':  'outer: ptc_async',
-                'cmd_sync':   'outer: ptc_sync',
-                'report':     'outer: ptc_report',
-                'service':    'outer: ptc',
+            u'module': ProtocolAscii,
+            u'node': u'ptc_ascii',
+            u'args': [u'cmd_pend_size'],
+            u'iomap': {
+                u'cmd_async':  u'outer: ptc_async',
+                u'cmd_sync':   u'outer: ptc_sync',
+                u'report':     u'outer: ptc_report',
+                u'service':    u'outer: ptc',
                 
-                'packet_in':  'inner: pkt_ser2ptc',
-                'packet_out': 'inner: pkt_ptc2ser'
+                u'packet_in':  u'inner: pkt_ser2ptc',
+                u'packet_out': u'inner: pkt_ptc2ser'
             }
         },
         {
-            'module': UarmBody,
-            'node': 'uarm_body',
-            'iomap': {
-                'pos_in':    'outer: pos_in',
-                'pos_out':   'outer: pos_out',
-                'buzzer':    'outer: buzzer',
-                'service':   'outer: service',
+            u'module': UarmBody,
+            u'node': u'uarm_body',
+            u'iomap': {
+                u'pos_in':    u'outer: pos_in',
+                u'pos_out':   u'outer: pos_out',
+                u'buzzer':    u'outer: buzzer',
+                u'service':   u'outer: service',
                 
-                'cmd_async': 'outer: ptc_async',
-                'cmd_sync':  'outer: ptc_sync',
-                'report':    'outer: ptc_report'
+                u'cmd_async': u'outer: ptc_async',
+                u'cmd_sync':  u'outer: ptc_sync',
+                u'report':    u'outer: ptc_report'
             }
         },
         {
-            'module': Gripper,
-            'node': 'gripper',
-            'iomap': {
-                'service':  'outer: gripper',
-                'cmd_sync': 'outer: ptc_sync'
+            u'module': Gripper,
+            u'node': u'gripper',
+            u'iomap': {
+                u'service':  u'outer: gripper',
+                u'cmd_sync': u'outer: ptc_sync'
             }
         },
         {
-            'module': Pump,
-            'node': 'pump',
-            'iomap': {
-                'service':      'outer: pump',
-                'limit_switch': 'outer: limit_switch',
-                'cmd_sync':     'outer: ptc_sync',
-                'report':       'outer: ptc_report'
+            u'module': Pump,
+            u'node': u'pump',
+            u'iomap': {
+                u'service':      u'outer: pump',
+                u'limit_switch': u'outer: limit_switch',
+                u'cmd_sync':     u'outer: ptc_sync',
+                u'report':       u'outer: ptc_report'
             }
         }
     ]
     
     def __init__(self, ufc, node, iomap, **kwargs):
-        if 'dev_port' not in kwargs:
-            kwargs['dev_port'] = None
-        if 'baud' not in kwargs:
-            kwargs['baud'] = 115200
-        if 'filters' not in kwargs:
-            kwargs['filters'] = {'hwid': 'USB VID:PID=0403:6001'}
-        if 'cmd_pend_size' not in kwargs:
-            kwargs['cmd_pend_size'] = 1
-        super().__init__(ufc, node, iomap, **kwargs)
+        if u'dev_port' not in kwargs:
+            kwargs[u'dev_port'] = None
+        if u'baud' not in kwargs:
+            kwargs[u'baud'] = 115200
+        if u'filters' not in kwargs:
+            kwargs[u'filters'] = {u'hwid': u'USB VID:PID=0403:6001'}
+        if u'cmd_pend_size' not in kwargs:
+            kwargs[u'cmd_pend_size'] = 1
+        super(Uarm, self).__init__(ufc, node, iomap, **kwargs)
 
 

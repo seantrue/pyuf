@@ -7,10 +7,11 @@
 # Author: Duke Fong <duke@ufactory.cc>
 
 
+from __future__ import absolute_import
 import sys, os
 from time import sleep
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), u'../..'))
 
 from uf.ufc import ufc_init
 from uf.comm.serial_ascii import SerialAscii
@@ -18,49 +19,49 @@ from uf.utils.log import *
 
 logger_init(logging.VERBOSE)
 
-print('setup ser_ascii ...')
+print u'setup ser_ascii ...'
 
 ser_iomap = {
-        'out':     'ser_out',
-        'in':      'ser_in',
-        'service': 'ser_service'
+        u'out':     u'ser_out',
+        u'in':      u'ser_in',
+        u'service': u'ser_service'
 }
 
 ufc = ufc_init()
-ser_ascii = SerialAscii(ufc, 'ser_ascii', ser_iomap, filters = {'hwid': 'USB VID:PID=2341:0042'})
+ser_ascii = SerialAscii(ufc, u'ser_ascii', ser_iomap, filters = {u'hwid': u'USB VID:PID=2341:0042'})
 
 
-print('setup test ...')
-logger = logging.getLogger('test')
+print u'setup test ...'
+logger = logging.getLogger(u'test')
 
 def ser_out_cb(msg):
-    logger.debug('callback: ' + msg)
+    logger.debug(u'callback: ' + msg)
 
 test_ports = {
-        'ser_out':     {'dir': 'in',  'type': 'topic', 'callback': ser_out_cb},
-        'ser_in':      {'dir': 'out', 'type': 'topic'},
-        'ser_service': {'dir': 'out', 'type': 'service'}
+        u'ser_out':     {u'dir': u'in',  u'type': u'topic', u'callback': ser_out_cb},
+        u'ser_in':      {u'dir': u'out', u'type': u'topic'},
+        u'ser_service': {u'dir': u'out', u'type': u'service'}
 }
 
 test_iomap = {
-        'ser_out':     'ser_out',
-        'ser_in':      'ser_in',
-        'ser_service': 'ser_service'
+        u'ser_out':     u'ser_out',
+        u'ser_in':      u'ser_in',
+        u'ser_service': u'ser_service'
 }
 
-ufc.node_init('test', test_ports, test_iomap)
+ufc.node_init(u'test', test_ports, test_iomap)
 
 
-print('\nsleep 2 sec ...\n')
+print u'\nsleep 2 sec ...\n'
 sleep(2)
 
-print('\nset X330 ...')
-test_ports['ser_in']['handle'].publish('G0 X300 Y0 Z50')
+print u'\nset X330 ...'
+test_ports[u'ser_in'][u'handle'].publish(u'G0 X300 Y0 Z50')
 
-print('test service ...')
-print('service ret: ' + test_ports['ser_service']['handle'].call('test string...'))
+print u'test service ...'
+print u'service ret: ' + test_ports[u'ser_service'][u'handle'].call(u'test string...')
 
-print('done ...')
+print u'done ...'
 while True:
     sleep(1)
 

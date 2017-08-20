@@ -7,8 +7,8 @@
 # Author: Duke Fong <duke@ufactory.cc>
 
 
-class UFC():
-    '''\
+class UFC(object):
+    u'''\
     Communication wrapper for uFactory
     
     On the top of mediums:
@@ -26,7 +26,7 @@ class UFC():
     '''
     
     def node_init(self, node, ports, iomap):
-        '''\
+        u'''\
         Format example for ports and iomap:
         
         ports = {
@@ -42,23 +42,23 @@ class UFC():
         '''
         
         for k, item in ports.items():
-            item['handle'] = None
+            item[u'handle'] = None
         
         for k, path in iomap.items():
-            if ports[k]['type'] == 'topic':
-                if ports[k]['dir'] == 'in':
+            if ports[k][u'type'] == u'topic':
+                if ports[k][u'dir'] == u'in':
                     kwargs = {}
-                    if 'queue_size' in ports[k]:
-                        kwargs['queue_size'] = ports[k]['queue_size']
-                    if 'allow_drop' in ports[k]:
-                        kwargs['allow_drop'] = ports[k]['allow_drop']
-                    ports[k]['handle'] = self.topic_subscriber(node, path, ports[k]['callback'], **kwargs)
-                elif ports[k]['dir'] == 'out':
-                    ports[k]['handle'] = self.topic_publisher(node, path)
-            elif ports[k]['type'] == 'service':
-                if ports[k]['dir'] == 'in':
-                    ports[k]['handle'] = self.service_register(node, path, ports[k]['callback'])
-                elif ports[k]['dir'] == 'out':
-                    ports[k]['handle'] = self.service_proxy(node, path)
+                    if u'queue_size' in ports[k]:
+                        kwargs[u'queue_size'] = ports[k][u'queue_size']
+                    if u'allow_drop' in ports[k]:
+                        kwargs[u'allow_drop'] = ports[k][u'allow_drop']
+                    ports[k][u'handle'] = self.topic_subscriber(node, path, ports[k][u'callback'], **kwargs)
+                elif ports[k][u'dir'] == u'out':
+                    ports[k][u'handle'] = self.topic_publisher(node, path)
+            elif ports[k][u'type'] == u'service':
+                if ports[k][u'dir'] == u'in':
+                    ports[k][u'handle'] = self.service_register(node, path, ports[k][u'callback'])
+                elif ports[k][u'dir'] == u'out':
+                    ports[k][u'handle'] = self.service_proxy(node, path)
 
 
